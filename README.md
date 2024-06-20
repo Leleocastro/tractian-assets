@@ -1,7 +1,7 @@
 # Assets
 
 ## Demo
-https://github.com/Leleocastro/tractian-assets/blob/main/simulation.mov
+![](simulation.mov)
 
 ## Packages
 - Dio - HTTP Requests
