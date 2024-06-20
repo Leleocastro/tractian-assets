@@ -113,6 +113,9 @@ void main() async {
 
   tearDown(() {
     controller.listenError.value = '';
+    controller.query = '';
+    controller.type = '';
+    controller.status = '';
   });
 
   group('AssetsController.fetch', () {
@@ -187,6 +190,127 @@ void main() async {
       expect(controller.root.children[2].children.length, 0);
       expect(controller.root.children[3], isA<ComponentModel>());
       expect(controller.root.children[3].children.length, 0);
+    });
+  });
+  group('AssetsController.filter', () {
+    test('Filter by name', () async {
+      when(() => locationService.fetchLocations(any())).thenAnswer((_) async => (locations.map((e) => LocationModel.fromMap(e)).toList(), null));
+      when(() => assetService.fetchAssetsAndComponents(any())).thenAnswer((_) async => (
+            assetsAndComponents.map((item) {
+              if (item['sensorType'] != null) {
+                return ComponentModel.fromMap(item);
+              } else {
+                return AssetModel.fromMap(item);
+              }
+            }).toList(),
+            null
+          ));
+
+      await controller.fetch('1');
+      controller.query = 'Motor';
+      controller.filter();
+      expect(verifyQuantityItemsTree(controller.root.children), 10);
+    });
+
+    test('Filter by type', () async {
+      when(() => locationService.fetchLocations(any())).thenAnswer((_) async => (locations.map((e) => LocationModel.fromMap(e)).toList(), null));
+      when(() => assetService.fetchAssetsAndComponents(any())).thenAnswer((_) async => (
+            assetsAndComponents.map((item) {
+              if (item['sensorType'] != null) {
+                return ComponentModel.fromMap(item);
+              } else {
+                return AssetModel.fromMap(item);
+              }
+            }).toList(),
+            null
+          ));
+
+      await controller.fetch('1');
+      controller.type = 'energy';
+      controller.filter();
+      expect(verifyQuantityItemsTree(controller.root.children), 1);
+    });
+
+    test('Filter by status', () async {
+      when(() => locationService.fetchLocations(any())).thenAnswer((_) async => (locations.map((e) => LocationModel.fromMap(e)).toList(), null));
+      when(() => assetService.fetchAssetsAndComponents(any())).thenAnswer((_) async => (
+            assetsAndComponents.map((item) {
+              if (item['sensorType'] != null) {
+                return ComponentModel.fromMap(item);
+              } else {
+                return AssetModel.fromMap(item);
+              }
+            }).toList(),
+            null
+          ));
+
+      await controller.fetch('1');
+      controller.status = 'alert';
+      controller.filter();
+      expect(verifyQuantityItemsTree(controller.root.children), 5);
+    });
+
+    test('Filter by name, type and status', () async {
+      when(() => locationService.fetchLocations(any())).thenAnswer((_) async => (locations.map((e) => LocationModel.fromMap(e)).toList(), null));
+      when(() => assetService.fetchAssetsAndComponents(any())).thenAnswer((_) async => (
+            assetsAndComponents.map((item) {
+              if (item['sensorType'] != null) {
+                return ComponentModel.fromMap(item);
+              } else {
+                return AssetModel.fromMap(item);
+              }
+            }).toList(),
+            null
+          ));
+
+      await controller.fetch('1');
+      controller.query = 'Motor';
+      controller.type = 'energy';
+      controller.status = 'alert';
+      controller.filter();
+      expect(verifyQuantityItemsTree(controller.root.children), 0);
+
+      controller.query = 'Motor';
+      controller.type = 'energy';
+      controller.status = '';
+      controller.filter();
+      expect(verifyQuantityItemsTree(controller.root.children), 0);
+
+      controller.query = 'Motor';
+      controller.type = '';
+      controller.status = 'alert';
+      controller.filter();
+      expect(verifyQuantityItemsTree(controller.root.children), 5);
+
+      controller.query = '';
+      controller.type = 'energy';
+      controller.status = 'alert';
+      controller.filter();
+      expect(verifyQuantityItemsTree(controller.root.children), 0);
+
+      controller.query = 'Motor';
+      controller.type = '';
+      controller.status = '';
+      controller.filter();
+      expect(verifyQuantityItemsTree(controller.root.children), 10);
+
+      controller.query = '';
+      controller.type = 'energy';
+      controller.status = '';
+      controller.filter();
+      expect(verifyQuantityItemsTree(controller.root.children), 1);
+
+      controller.query = '';
+      controller.type = '';
+      controller.status = 'alert';
+      controller.filter();
+      expect(verifyQuantityItemsTree(controller.root.children), 5);
+
+      controller.query = '';
+      controller.type = '';
+      controller.status = '';
+      controller.filter();
+      expect(verifyQuantityItemsTree(controller.root.children), 13);
     });
   });
 }
