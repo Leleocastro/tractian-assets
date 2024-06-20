@@ -16,6 +16,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Assets',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: false,
       ),
